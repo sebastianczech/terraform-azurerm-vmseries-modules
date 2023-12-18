@@ -37,6 +37,11 @@ variable "resource_group_name" {
   type        = string
 }
 
+variable "resource_group_name_nsg_rt" {
+  description = "Name of the Resource Group to use for NSG and RT."
+  type        = string
+}
+
 variable "address_space" {
   description = "The address space used by the virtual network. You can supply more than one address space."
   type        = list(string)

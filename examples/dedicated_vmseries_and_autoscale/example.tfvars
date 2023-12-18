@@ -1,7 +1,8 @@
 # --- GENERAL --- #
-location            = "North Europe"
-resource_group_name = "autoscale-dedicated"
-name_prefix         = "example-"
+location                   = "North Europe"
+resource_group_name        = "autoscale-dedicated"
+resource_group_name_nsg_rt = "autoscale-dedicated2"
+name_prefix                = "example-"
 tags = {
   "CreatedBy"   = "Palo Alto Networks"
   "CreatedWith" = "Terraform"

@@ -46,7 +46,7 @@ resource "azurerm_network_security_group" "this" {
 
   name                = "${var.name_prefix}${each.value.name}"
   location            = try(each.value.location, var.location)
-  resource_group_name = var.resource_group_name
+  resource_group_name = var.resource_group_name_nsg_rt
   tags                = var.tags
 }
 
@@ -69,7 +69,7 @@ resource "azurerm_network_security_rule" "this" {
   }
 
   name                         = each.value.rule_name
-  resource_group_name          = var.resource_group_name
+  resource_group_name          = var.resource_group_name_nsg_rt
   network_security_group_name  = azurerm_network_security_group.this[each.value.nsg_key].name
   priority                     = each.value.rule.priority
   direction                    = each.value.rule.direction
@@ -92,7 +92,7 @@ resource "azurerm_route_table" "this" {
 
   name                = "${var.name_prefix}${each.value.name}"
   location            = try(each.value.location, var.location)
-  resource_group_name = var.resource_group_name
+  resource_group_name = var.resource_group_name_nsg_rt
   tags                = var.tags
 }
 
@@ -115,7 +115,7 @@ resource "azurerm_route" "this" {
   }
 
   name                   = each.value.route_name
-  resource_group_name    = var.resource_group_name
+  resource_group_name    = var.resource_group_name_nsg_rt
   route_table_name       = azurerm_route_table.this[each.value.route_table_key].name
   address_prefix         = each.value.route.address_prefix
   next_hop_type          = each.value.route.next_hop_type

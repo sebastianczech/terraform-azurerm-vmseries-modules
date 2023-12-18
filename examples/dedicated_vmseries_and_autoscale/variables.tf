@@ -40,6 +40,11 @@ variable "resource_group_name" {
   type        = string
 }
 
+variable "resource_group_name_nsg_rt" {
+  description = "Name of the Resource Group to use for NSG and RT."
+  type        = string
+}
+
 variable "enable_zones" {
   description = "If `true`, enable zone support for resources."
   default     = true

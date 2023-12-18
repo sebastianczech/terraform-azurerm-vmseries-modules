@@ -16,7 +16,7 @@ locals {
 }
 
 # Create or source the Resource Group.
-resource "azurerm_resource_group" "this" {
+resource "azurerm_resource_group" "first" {
   count    = var.create_resource_group ? 1 : 0
   name     = "${var.name_prefix}${var.resource_group_name}"
   location = var.location
@@ -24,13 +24,27 @@ resource "azurerm_resource_group" "this" {
   tags = var.tags
 }
 
-data "azurerm_resource_group" "this" {
+data "azurerm_resource_group" "first" {
   count = var.create_resource_group ? 0 : 1
   name  = var.resource_group_name
 }
 
+resource "azurerm_resource_group" "second" {
+  count    = var.create_resource_group ? 1 : 0
+  name     = "${var.name_prefix}${var.resource_group_name_nsg_rt}"
+  location = var.location
+
+  tags = var.tags
+}
+
+data "azurerm_resource_group" "second" {
+  count = var.create_resource_group ? 0 : 1
+  name  = var.resource_group_name_nsg_rt
+}
+
 locals {
-  resource_group = var.create_resource_group ? azurerm_resource_group.this[0] : data.azurerm_resource_group.this[0]
+  resource_group             = var.create_resource_group ? azurerm_resource_group.first[0] : data.azurerm_resource_group.first[0]
+  resource_group_name_nsg_rt = var.create_resource_group ? azurerm_resource_group.second[0] : data.azurerm_resource_group.second[0]
 }
 
 # Manage the network required for the topology.
@@ -39,11 +53,12 @@ module "vnet" {
 
   for_each = var.vnets
 
-  name                   = each.value.name
-  name_prefix            = var.name_prefix
-  create_virtual_network = try(each.value.create_virtual_network, true)
-  resource_group_name    = try(each.value.resource_group_name, local.resource_group.name)
-  location               = var.location
+  name                       = each.value.name
+  name_prefix                = var.name_prefix
+  create_virtual_network     = try(each.value.create_virtual_network, true)
+  resource_group_name        = try(each.value.resource_group_name, local.resource_group.name)
+  resource_group_name_nsg_rt = try(each.value.resource_group_name, local.resource_group_name_nsg_rt.name)
+  location                   = var.location
 
   address_space = try(each.value.create_virtual_network, true) ? each.value.address_space : []
 
