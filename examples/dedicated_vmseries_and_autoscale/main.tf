@@ -119,7 +119,8 @@ module "load_balancer" {
   )
   # network_security_group_name          = try(each.value.network_security_group_name, null)
   network_security_resource_group_name = try(
-    var.vnets[each.value.nsg_vnet_key].resource_group_name,
+    # var.vnets[each.value.nsg_vnet_key].resource_group_name,
+    local.resource_group_name_nsg_rt.name,
     each.value.network_security_group_rg_name,
     null
   )
